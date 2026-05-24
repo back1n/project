@@ -25,5 +25,5 @@ except FileNotFoundError:
     raise("не обнаружен файл config.json")
 
 except KeyError as key:
-    logging.error(f"Не обнаржуен ключ {key}")
+    logging.error(f"Не обнаржуен параметр {key}")
 
