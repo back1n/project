@@ -20,6 +20,7 @@ try:
         JIRA_URL = data['jira_url']
         USERNAME = data['username']
         PASSWORD_OR_TOKEN = data['password']
+        SESSION = data['sessions']
 
         logging.info('Файл успешно прочитан')
         
