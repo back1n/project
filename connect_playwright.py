@@ -8,33 +8,29 @@ def run():
         browser = p.chromium.launch(headless=False)  # Запуск браузера
         page = browser.new_page()  # Создание новой страницы
         
-        for i, url in enumerate(SESSION):
+        try:
+            page.goto(JIRA_URL)  # переход по ссылке
             
-            page.goto(url)  # переход по ссылке
-            
+            # Вход в систему
             page.get_by_role("textbox", name="Логин").click()
             page.get_by_role("textbox", name="Логин").fill(f"{USERNAME}")
             page.get_by_role("textbox", name="Логин").press("Tab")
             page.get_by_role("textbox", name="Пароль").fill(f"{PASSWORD_OR_TOKEN}")
             page.get_by_role("button", name="Вход").click()
+        except:
+            print("Проблемма с входом в систему")
+            logging.error(f"Ошибка входа в {JIRA_URL}")
             
-            page.wait_for_load_state("networkidle")  # networkidle - ожидание пока подгрузяться js
-            
-            poker_block = page.locator(".session-participants-status")
-            
-        if poker_block.count() > 0:
-            # 3. Берем HTML только внутри этого блока
-            block_html = poker_block.inner_html()
-        
-            print("--- НАЙДЕННЫЙ БЛОК ---")
-        
-            # Можно сохранить в отдельный файл
-            filename = f"page_{i+1}.html"
-            with open(filename, "w", encoding="utf-8") as file:
-                file.write(block_html)
-                
-        else:
-            print("Блок с покером не найден!")
+        for url in SESSION:
+            try:
+                page.goto(url)
+
+                # Извелечение данных
+                session_grade = ''
+            except:
+                print("Возможно ссылка повреждена")
+                logging.error(f"Проверьте ссылку: {url}")
+
         
         browser.close()
         
